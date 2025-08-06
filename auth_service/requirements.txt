@@ -1,4 +1,3 @@
-
 Flask==2.3.2
 Flask-SQLAlchemy
 psycopg2-binary
@@ -7,4 +6,4 @@ python-dotenv
 Flask-Cors
 pytest
 Werkzeug<3.0.0
-
+gunicorn
