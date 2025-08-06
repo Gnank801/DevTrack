@@ -22,7 +22,7 @@ services:
 
   gateway:
     build: ./gateway
-    ports: ["80:80"]
+    ports: ["8081:80"]
     # This service depends on all other services being started
     depends_on:
       auth_service:
