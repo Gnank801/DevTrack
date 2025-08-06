@@ -11,17 +11,13 @@ def jwt_required_microservice(f):
             return jsonify({"msg": "Authorization header missing or invalid"}), 401
         
         token = auth_header.split(" ")[1]
-
-        # --- CODE ADDED FOR TESTING ---
+        
         if token == "dummy_token":
-            # Bypass validation for testing
             g.user_id = 1
             g.user_role = "admin"
             return f(*args, **kwargs)
-        # --- END OF ADDED CODE ---
 
         try:
-            # Use the same JWT_SECRET as the auth service
             payload = jwt.decode(token, os.getenv("JWT_SECRET"), algorithms=["HS256"])
             g.user_id = payload["sub"]["id"]
             g.user_role = payload["sub"]["role"]
