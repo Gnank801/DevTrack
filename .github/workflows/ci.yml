@@ -12,25 +12,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
 
-    - name: Install dependencies and run tests for auth_service
+    - name: Install and test auth_service
+      working-directory: ./auth_service
       run: |
-        pip install -r auth_service/requirements.txt
-        PYTHONPATH=auth_service pytest auth_service/tests/
+        pip install -r requirements.txt
+        python -m pytest
 
-    - name: Install dependencies and run tests for project_service
+    - name: Install and test project_service
+      working-directory: ./project_service
       run: |
-        pip install -r project_service/requirements.txt
-        PYTHONPATH=project_service pytest project_service/tests/
+        pip install -r requirements.txt
+        python -m pytest
 
-    - name: Install dependencies and run tests for issue_service
+    - name: Install and test issue_service
+      working-directory: ./issue_service
       run: |
-        pip install -r issue_service/requirements.txt
-        PYTHONPATH=issue_service pytest issue_service/tests/
+        pip install -r requirements.txt
+        python -m pytest
 

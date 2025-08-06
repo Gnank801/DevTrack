@@ -1,3 +1,4 @@
+
 from flask import Flask
 from flask_cors import CORS
 from config import Config
@@ -12,8 +13,7 @@ def create_app(config_class=Config):
     app.register_blueprint(issue_bp)
     return app
 
-# This block is for running the app directly with Gunicorn
-# It will be ignored by the pytest runner
 app = create_app()
 with app.app_context():
     db.create_all()
+
