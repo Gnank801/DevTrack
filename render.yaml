@@ -45,7 +45,6 @@ services:
     envVars:
       - fromGroup: common-secrets
       # IMPORTANT: You must set MONGO_URI in the Render Dashboard Environment Group.
-      # It will not work with the default value.
       - key: MONGO_URI
         value: "mongodb://placeholder"
 
