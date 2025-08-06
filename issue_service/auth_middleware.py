@@ -18,6 +18,7 @@ def jwt_required_microservice(f):
             return f(*args, **kwargs)
 
         try:
+            # Use the same JWT_SECRET as the auth service
             payload = jwt.decode(token, os.getenv("JWT_SECRET"), algorithms=["HS256"])
             g.user_id = payload["sub"]["id"]
             g.user_role = payload["sub"]["role"]
