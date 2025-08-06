@@ -1,0 +1,11 @@
+
+Flask==2.3.2
+Flask-SQLAlchemy
+psycopg2-binary
+python-dotenv
+Flask-Cors
+requests
+gunicorn
+Werkzeug<3.0.0
+pytest
+

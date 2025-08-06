@@ -1,0 +1,7 @@
+
+Flask==2.3.2
+python-dotenv
+pymongo
+Flask-Cors
+Werkzeug<3.0.0
+

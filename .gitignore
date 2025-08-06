@@ -1,0 +1,14 @@
+# Ignore environment files
+.env
+
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Node.js artifacts
+node_modules/
+npm-debug.log
+.pnpm-store
+
+# Docker artifacts
+.dockerignore

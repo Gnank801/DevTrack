@@ -1,0 +1,72 @@
+
+databases:
+  - name: devtrack-postgres
+    plan: free
+
+services:
+  # === BACKEND SERVICES (Private) ===
+  - name: auth-service
+    type: pserv
+    env: docker
+    dockerfilePath: ./auth_service/Dockerfile
+    envVars:
+      - fromGroup: common-secrets
+      - key: DATABASE_URL
+        fromDatabase:
+          name: devtrack-postgres
+          property: connectionString
+
+  - name: project-service
+    type: pserv
+    env: docker
+    dockerfilePath: ./project_service/Dockerfile
+    envVars:
+      - fromGroup: common-secrets
+      - key: DATABASE_URL
+        fromDatabase:
+          name: devtrack-postgres
+          property: connectionString
+
+  - name: issue-service
+    type: pserv
+    env: docker
+    dockerfilePath: ./issue_service/Dockerfile
+    envVars:
+      - fromGroup: common-secrets
+      - key: DATABASE_URL
+        fromDatabase:
+          name: devtrack-postgres
+          property: connectionString
+  
+  - name: analytics-service
+    type: pserv
+    env: docker
+    dockerfilePath: ./analytics_service/Dockerfile
+    envVars:
+      - fromGroup: common-secrets
+      # IMPORTANT: You must set MONGO_URI in the Render Dashboard Environment Group.
+      # It will not work with the default value.
+      - key: MONGO_URI
+        value: "mongodb://placeholder"
+
+  # === FRONTEND (Private) ===
+  - name: frontend
+    type: pserv
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile
+
+  # === GATEWAY (Public) ===
+  # This is the only service accessible from the internet.
+  - name: gateway
+    type: web
+    plan: free
+    env: docker
+    dockerfilePath: ./gateway/Dockerfile
+
+# === ENVIRONMENT VARIABLE GROUP ===
+envVarGroups:
+  - name: common-secrets
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+

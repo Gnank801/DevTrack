@@ -1,0 +1,75 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    ports: ["5433:5432"]
+    # This healthcheck tells other services to wait until Postgres is ready
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mongo:
+    image: mongo:6
+    volumes: [mongo_data:/data/db]
+    ports: ["27017:27017"]
+
+  gateway:
+    build: ./gateway
+    ports: ["80:80"]
+    # This service depends on all other services being started
+    depends_on:
+      auth_service:
+        condition: service_started
+      project_service:
+        condition: service_started
+      issue_service:
+        condition: service_started
+      frontend:
+        condition: service_started
+
+  auth_service:
+    build: ./auth_service
+    env_file: .env
+    depends_on:
+      # This now waits for the healthcheck to pass
+      postgres:
+        condition: service_healthy
+
+  project_service:
+    build: ./project_service
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth_service:
+        condition: service_started
+
+  issue_service:
+    build: ./issue_service
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth_service:
+        condition: service_started
+      project_service:
+        condition: service_started
+
+  analytics_service:
+    build: ./analytics_service
+    env_file: .env
+    depends_on: [mongo, auth_service]
+
+  frontend:
+    build: ./frontend
+
+volumes:
+  postgres_data:
+  mongo_data:
