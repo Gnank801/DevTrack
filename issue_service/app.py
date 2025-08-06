@@ -1,4 +1,3 @@
-
 from flask import Flask
 from flask_cors import CORS
 from config import Config
@@ -18,4 +17,3 @@ def create_app(config_class=Config):
 app = create_app()
 with app.app_context():
     db.create_all()
-
