@@ -12,8 +12,8 @@ def create_app(config_class=Config):
     app.register_blueprint(issue_bp)
     return app
 
-# This block is for running the app directly with Gunicorn
-# It will be ignored by the pytest runner
-app = create_app()
-with app.app_context():
-    db.create_all()
+if __name__ == "__main__":
+    app = create_app()
+    with app.app_context():
+        db.create_all()
+    app.run(host="0.0.0.0", port=5002)
